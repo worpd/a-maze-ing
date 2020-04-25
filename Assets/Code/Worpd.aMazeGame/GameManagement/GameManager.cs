@@ -14,7 +14,7 @@ namespace Worpd.aMazeGame.GameManagement
 
     public class GameManager : MonoBehaviour
     {
-        public GameObject MazeWallPrefab;
+        private static GameManager Instance;
         private string Level { get; set; }
         private MazeManager MazeManager;
         private int MazeHeightSetting = 30;
@@ -23,19 +23,20 @@ namespace Worpd.aMazeGame.GameManagement
 
         private void Awake()
         {
-            DontDestroyOnLoad(gameObject);
-            MazeManager = new MazeManager(MazeWallPrefab);
+            if (Instance == null)
+            {
+                DontDestroyOnLoad(gameObject);
+                Instance = this;
+            }
+            else
+            {
+                DestroyImmediate(gameObject);
+            }
+        }
+
+        private void Init()
+        {
             State = GameState.MainMenu;
-        }
-
-        public void SetMazeHeightSetting(int Height)
-        {
-            MazeHeightSetting = Height * 3;
-        }
-
-        public void SetMazeWidthSetting(int Width)
-        {
-            MazeWidthSetting = Width * 3;
         }
 
         public void LoadLevel(string lvl)
